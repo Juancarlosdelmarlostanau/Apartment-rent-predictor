@@ -1,1 +1,1 @@
-scrip.py
+scrip

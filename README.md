@@ -12,15 +12,15 @@ Predicción del precio de alquiler por superficie(m2) de viviendas en Estados Un
 - **Descripción:** anuncios de viviendas en alquiler en Estados Unidos.
 - **Versión utilizada:** 10.000 registros.
 
-## 🛠️ Metodología
+##  Metodología
 
 (En construcción)
 
-## 📊 Resultados principales
+##  Resultados principales
 
 (En construcción)
 
-## 🚀 Aplicación
+##  Aplicación
 
 (En construcción: aplicación interactiva con Streamlit)
 
