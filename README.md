@@ -1,6 +1,6 @@
 # Apartment Rent Predictor
 
-Predicción del precio de alquiler por superficie(m2) de viviendas en Estados Unidos mediante Machine Learning.
+Predicción del precio de alquiler por m2, de viviendas en Estados Unidos mediante Machine Learning.
 
 ##  Objetivo
 
@@ -67,7 +67,7 @@ Del baseline al modelo final, el R² mejora en 0,16 puntos y el error medio se r
 - **Los modelos ensemble aportan la mayor mejora** (R² de 0,65 a 0,79). El ajuste de hiperparámetros añade una mejora pequeña: Random Forest es robusto y estaba cerca de su techo.
 - **`max_features` es el hiperparámetro clave:** limitar las variables que ve cada árbol (60%) mejora el modelo.
 - **Los modelos ensemble aportan la mayor mejora:** pasar de un árbol de decisión a Random Forest eleva el R² de 0,65 a 0,79, el mayor salto de todo el proyecto.
-- **EL MODELO HA ALCANZADO SU TECHO CON LOS DATOS DISPONIBLES:** Grid Search no mejora el resultado en el test (R² = 0,787 con los parámetros iniciales y con los ajustados), y Random Search, tras probar 200 combinaciones sobre más de 67.000 posibles, solo lo eleva a 0,794. Además, pasar de 30 a 200 combinaciones apenas aporta (+0,003). El rendimiento ya no depende de la configuración del modelo, sino de la información disponible: para mejorar de forma significativa harán falta más datos o nuevas variables.
+- **El modelo ha alcanzado su techo con los datos disponibles:** Grid Search no mejora el resultado en el test (R² = 0,787 con los parámetros iniciales y con los ajustados), y Random Search, tras probar 200 combinaciones sobre más de 67.000 posibles, solo lo eleva a 0,794. Además, pasar de 30 a 200 combinaciones apenas aporta (+0,003). El rendimiento ya no depende de la configuración del modelo, sino de la información disponible: para mejorar de forma significativa harán falta más datos o nuevas variables.
 
 ## Aplicación
 
@@ -117,6 +117,7 @@ Apartment-rent-predictor/
 ├── requirements.txt                                 # Librerías necesarias
 └── README.md
 ```
+
 ## Limitaciones
 
 - Los datos son de 2019 (previos a la pandemia), por lo que el modelo refleja precios de ese momento.
@@ -138,4 +139,4 @@ Apartment-rent-predictor/
 ##  Autor
 
 **Juan Carlos Del Mar Lostanau**
-Arquitecto, con estudios Urbanos/student  Data Analytics -ironhack 
+Arquitecto (Perú) con estudios de máster en Planeamiento Urbano, especialidad en Estudios Urbanos. Estudiante de Data Analytics en Ironhack, con interés en la aplicación de datos y Machine Learning al sector inmobiliario y las ciudades inteligentes.
