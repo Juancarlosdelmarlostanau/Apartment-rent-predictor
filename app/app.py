@@ -10,6 +10,21 @@ sys.path.append(str(ROOT))
 from scrips.modeling import load_artifacts, predict_price_per_m2
 
 MODEL_MAE = 3.03  # Error medio del modelo final en el test ($/m²)
+MIN_LISTINGS = 5  # Por debajo de este número de anuncios, la estimación de la ciudad es menos fiable
+
+STATE_NAMES = {
+    "AK": "Alaska", "AL": "Alabama", "AR": "Arkansas", "AZ": "Arizona", "CA": "California",
+    "CO": "Colorado", "CT": "Connecticut", "DC": "Washington D.C.", "DE": "Delaware",
+    "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "IA": "Iowa", "ID": "Idaho",
+    "IL": "Illinois", "IN": "Indiana", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana",
+    "MA": "Massachusetts", "MD": "Maryland", "ME": "Maine", "MI": "Michigan", "MN": "Minnesota",
+    "MO": "Missouri", "MS": "Mississippi", "MT": "Montana", "NC": "North Carolina",
+    "ND": "North Dakota", "NE": "Nebraska", "NH": "New Hampshire", "NJ": "New Jersey",
+    "NM": "New Mexico", "NV": "Nevada", "NY": "New York", "OH": "Ohio", "OK": "Oklahoma",
+    "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
+    "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VA": "Virginia",
+    "VT": "Vermont", "WA": "Washington", "WI": "Wisconsin", "WV": "West Virginia", "WY": "Wyoming",
+}
 
 st.set_page_config(page_title="Apartment Rent Predictor", page_icon="🏢")
 
@@ -22,8 +37,13 @@ def load_model():
 
 @st.cache_data
 def load_cities():
-    """Carga la tabla de ciudades con sus coordenadas medias y su estado."""
+    """Carga la tabla de ciudades con sus coordenadas medias, su estado y su número de anuncios."""
     return pd.read_csv(ROOT / "data" / "clean" / "cities.csv")
+
+
+def default_index(options, default):
+    """Devuelve la posición del valor por defecto en la lista de opciones (o 0 si no está)."""
+    return options.index(default) if default in options else 0
 
 
 model, model_columns = load_model()
@@ -37,16 +57,28 @@ st.caption("Modelo: Random Forest entrenado con anuncios de 2019 · R² = 0,79 �
 # ---------- 1. Datos de la vivienda ----------
 st.header("1. Datos de la vivienda")
 
+states = sorted(cities["state"].unique())
+
 col1, col2 = st.columns(2)
 with col1:
-    state = st.selectbox("Estado", sorted(cities["state"].unique()))
-    city = st.selectbox("Ciudad", sorted(cities.loc[cities["state"] == state, "cityname"]))
+    state = st.selectbox("Estado", states, index=default_index(states, "TX"),
+                         format_func=lambda code: f"{STATE_NAMES.get(code, code)} ({code})")
+    state_cities = sorted(cities.loc[cities["state"] == state, "cityname"])
+    city = st.selectbox("Ciudad", state_cities, index=default_index(state_cities, "Austin"))
     area_m2 = st.number_input("Superficie (m²)", min_value=20, max_value=500, value=75)
 with col2:
     bedrooms = st.number_input("Dormitorios", min_value=0, max_value=9, value=2, help="0 = estudio")
     amenities_count = st.slider("Número de servicios", min_value=0, max_value=27, value=5,
                                 help="Parking, piscina, gimnasio, ascensor...")
     dogs_allowed = st.checkbox("Se admiten perros")
+
+location = cities[(cities["cityname"] == city) & (cities["state"] == state)].iloc[0]
+
+st.map(pd.DataFrame({"lat": [location["latitude"]], "lon": [location["longitude"]]}), zoom=9)
+
+if location["listings"] < MIN_LISTINGS:
+    st.warning(f"⚠️ Solo hay {location['listings']} anuncio(s) de {city} en los datos de entrenamiento: "
+               "la estimación para esta ciudad es menos fiable.")
 
 # ---------- 2. Precio estimado ----------
 price_m2 = predict_price_per_m2(model, model_columns, cities, city, state,

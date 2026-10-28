@@ -77,7 +77,18 @@ Del baseline al modelo final, el R² mejora en 0,16 puntos y el error medio se r
 
 ## Aplicación
 
-_(En construcción: aplicación interactiva con Streamlit y detector de oportunidades)_
+Aplicación interactiva desarrollada con **Streamlit** que permite:
+
+- **Estimar el alquiler** de una vivienda a partir de su ubicación (estado y ciudad), superficie, dormitorios, número de servicios y admisión de perros. Las coordenadas se obtienen automáticamente de la ciudad elegida.
+- **Detectar oportunidades:** al introducir el precio de un anuncio real, la aplicación lo compara con la estimación y lo clasifica como 🔴 sobrevalorado, 🔵 precio de mercado o 🟢 oportunidad. El margen de tolerancia es el error medio del modelo (3,03 $/m²) multiplicado por la superficie.
+- **Visualizar la ubicación** en un mapa y avisar cuando la ciudad tiene pocos anuncios (menos de 5) en los datos de entrenamiento.
+
+### Cómo ejecutarla
+
+Desde la carpeta raíz del proyecto:
+
+```bash
+streamlit run app/app.py
 
 ## 📁 Estructura del proyecto
 
@@ -98,7 +109,9 @@ Apartment-rent-predictor/
 ├── models/
 │   ├── rent_model.pkl                               # Modelo final (Random Forest)
 │   └── model_columns.pkl                            # Columnas que espera el modelo
-├── app/                                             # Aplicación de Streamlit
+├── app/
+│   └── app.py                                       # Aplicación de Streamlit
+├── requirements.txt                                 # Librerías necesarias
 └── README.md
 ```
 
