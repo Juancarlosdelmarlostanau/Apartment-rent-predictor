@@ -1,12 +1,12 @@
-#  Apartment Rent Predictor
+# Apartment Rent Predictor
 
 Predicción del precio de alquiler por superficie(m2) de viviendas en Estados Unidos mediante Machine Learning.
 
 ##  Objetivo
 
-Desarrollar un modelo de Machine Learning capaz de estimar el precio de alquiler por m² de una vivienda a partir de sus características (superficie, habitaciones, baños, servicios, ubicación, etc.).
+- Desarrollar un modelo de Machine Learning capaz de estimar el precio de alquiler por m² de una vivienda a partir de sus características (superficie, dormitorios, servicios y ubicación)
+- integrarlo en una aplicación interactiva con un detector de oportunidades que identifica anuncios sobrevalorados o por debajo del mercado.
 
-- Explorar la creación de un detector de oportunidades a partir de las predicciones del modelo.
 
 ##  Datos
 
@@ -66,14 +66,8 @@ Del baseline al modelo final, el R² mejora en 0,16 puntos y el error medio se r
 - **La correlación no lo cuenta todo:** `amenities_count`, descartada por su baja correlación, mejora los modelos ensemble, que aprovechan combinaciones de variables.
 - **Los modelos ensemble aportan la mayor mejora** (R² de 0,65 a 0,79). El ajuste de hiperparámetros añade una mejora pequeña: Random Forest es robusto y estaba cerca de su techo.
 - **`max_features` es el hiperparámetro clave:** limitar las variables que ve cada árbol (60%) mejora el modelo.
-- **Precios por habitación:** en ciudades universitarias aparecen pisos grandes anunciados con el precio por habitación en lugar de por vivienda.
-
-## Limitaciones
-
-- Los datos son de 2019 (previos a la pandemia), por lo que el modelo refleja precios de ese momento.
-- La distribución geográfica está desequilibrada: Texas y California concentran más de una cuarta parte de los anuncios.
-- Las viviendas de gama alta son escasas y el modelo comete errores mayores con ellas.
-- Grid Search y Random Search no garantizan los parámetros óptimos, sino los mejores de entre los probados.
+- **Los modelos ensemble aportan la mayor mejora:** pasar de un árbol de decisión a Random Forest eleva el R² de 0,65 a 0,79, el mayor salto de todo el proyecto.
+- **EL MODELO HA ALCANZADO SU TECHO CON LOS DATOS DISPONIBLES:** Grid Search no mejora el resultado en el test (R² = 0,787 con los parámetros iniciales y con los ajustados), y Random Search, tras probar 200 combinaciones sobre más de 67.000 posibles, solo lo eleva a 0,794. Además, pasar de 30 a 200 combinaciones apenas aporta (+0,003). El rendimiento ya no depende de la configuración del modelo, sino de la información disponible: para mejorar de forma significativa harán falta más datos o nuevas variables.
 
 ## Aplicación
 
@@ -85,12 +79,21 @@ Aplicación interactiva desarrollada con **Streamlit** que permite:
 
 ### Cómo ejecutarla
 
-Desde la carpeta raíz del proyecto:
+1. Instalar las dependencias:
 
-```bash
-streamlit run app/app.py
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 📁 Estructura del proyecto
+2. Desde la carpeta raíz del proyecto, lanzar la aplicación:
+
+   ```bash
+   streamlit run app/app.py
+   ```
+
+   Si el comando `streamlit` no se reconoce, se puede usar `python -m streamlit run app/app.py`
+
+## Estructura del proyecto
 
 ```
 Apartment-rent-predictor/
@@ -114,9 +117,25 @@ Apartment-rent-predictor/
 ├── requirements.txt                                 # Librerías necesarias
 └── README.md
 ```
+## Limitaciones
 
+- Los datos son de 2019 (previos a la pandemia), por lo que el modelo refleja precios de ese momento.
+- La distribución geográfica está desequilibrada: Texas y California concentran más de una cuarta parte de los anuncios, y muchas ciudades tienen muy pocos datos.
+- Las viviendas de gama alta son escasas y el modelo comete errores mayores con ellas.
+- Grid Search y Random Search no garantizan los parámetros óptimos, sino los mejores de entre los probados.
+- La aplicación no comprueba si los datos introducidos son coherentes (por ejemplo, 5 dormitorios en 75 m²): el modelo siempre devuelve una estimación.
+
+## Próximos pasos
+
+- **Datos actuales:** reentrenar el modelo con anuncios recientes para reflejar el mercado posterior a la pandemia.
+- **Más datos:** entrenar con la versión completa del dataset (100.000 anuncios) para mejorar la fiabilidad en ciudades y estados con pocos anuncios.
+- **Nuevas variables:** incorporar información urbana, como la distancia al centro de la ciudad, al transporte público o a servicios, y la antigüedad del edificio.
+- **Servicios individuales:** analizar qué servicios concretos (ascensor, piscina, parking...) influyen más en el precio, en lugar de usar solo su número total.
+- **Validación en la aplicación:** avisar al usuario cuando los datos introducidos no sean coherentes.
+- **Otros hiperparámetros:** ampliar la búsqueda con Random Search o probar otros modelos de boosting.
+- **Publicación:** desplegar la aplicación en Streamlit Community Cloud para que sea accesible desde cualquier navegador.
 
 ##  Autor
 
 **Juan Carlos Del Mar Lostanau**
-Arquitecto/student ironhack 
+Arquitecto, con estudios Urbanos/student  Data Analytics -ironhack 
