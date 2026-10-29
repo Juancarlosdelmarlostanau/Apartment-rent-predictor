@@ -219,3 +219,4 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .vscode/
+data/raw/apartments_for_rent_classified_100K.csv

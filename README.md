@@ -1,6 +1,7 @@
 # Apartment Rent Predictor
 
 Predicción del precio de alquiler por m2, de viviendas en Estados Unidos mediante Machine Learning.
+**🔗 Aplicación en línea:** [apartment-rent-predictor.streamlit.app](https://apartment-rent-predictor.streamlit.app)
 
 ##  Objetivo
 
@@ -79,6 +80,8 @@ Aplicación interactiva desarrollada con **Streamlit** que permite:
 
 ### Cómo ejecutarla
 
+La aplicación está publicada en **Streamlit Community Cloud** y puede usarse directamente desde el navegador: [apartment-rent-predictor.streamlit.app](https://apartment-rent-predictor.streamlit.app)
+
 1. Instalar las dependencias:
 
    ```bash
@@ -133,8 +136,7 @@ Apartment-rent-predictor/
 - **Nuevas variables:** incorporar información urbana, como la distancia al centro de la ciudad, al transporte público o a servicios, y la antigüedad del edificio.
 - **Servicios individuales:** analizar qué servicios concretos (ascensor, piscina, parking...) influyen más en el precio, en lugar de usar solo su número total.
 - **Validación en la aplicación:** avisar al usuario cuando los datos introducidos no sean coherentes.
-- **Otros hiperparámetros:** ampliar la búsqueda con Random Search o probar otros modelos de boosting.
-- **Publicación:** desplegar la aplicación en Streamlit Community Cloud para que sea accesible desde cualquier navegador.
+- **Métodos espaciales:** aplicar técnicas propias del análisis urbano, como la econometría espacial o la regresión geográficamente ponderada (GWR), y evaluar el modelo con validación cruzada espacial para medir su rendimiento en mercados no vistos.
 
 ##  Autor
 
