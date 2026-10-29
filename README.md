@@ -13,7 +13,8 @@ Predicción del precio de alquiler por m2, de viviendas en Estados Unidos median
 
 - **Fuente:** [Apartment for Rent Classified – UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/555/apartment+for+rent+classified)
 - **Descripción:** anuncios de viviendas en alquiler en Estados Unidos, publicados entre septiembre y diciembre de 2019.
-- **Versión utilizada:** 10.000 registros y 22 variables.
+- **Versión de entrenamiento:** 10.000 registros y 22 variables (incluida en `data/raw/`).
+- **Versión de prueba:** versión completa de 100.000 registros, usada solo para evaluar el modelo con datos nuevos. No se incluye en el repositorio por su tamaño: puede descargarse desde la página de UCI y guardarse en `data/raw/` para ejecutar el notebook `new_data_test.ipynb`.
 - **Licencia:** CC BY 4.0
 
 ## Metodología
@@ -48,6 +49,12 @@ Predicción del precio de alquiler por m2, de viviendas en Estados Unidos median
 ### 5. Modelo final
 **Random Forest** con 57 variables (5 principales + `amenities_count` + estados), ajustado con Random Search: `n_estimators=400`, `max_depth=25`, `max_leaf_nodes=2866`, `max_features=0.6`, `min_samples_leaf=2`.
 
+### 6. Prueba con datos nuevos
+- Evaluación del modelo final, sin reentrenar, con la versión completa del dataset.
+- Eliminación de los 9.983 anuncios que ya estaban en la versión de entrenamiento, para que la prueba sea independiente.
+- Limpieza con el mismo pipeline (`clean_data()`): 88.913 anuncios nuevos.
+- Análisis del error según el número de anuncios de cada ciudad en el entrenamiento.
+
 ## Resultados
 
 | Etapa | Modelo | Variables | R² | MAE ($/m²) | RMSE ($/m²) |
@@ -60,6 +67,15 @@ Predicción del precio de alquiler por m2, de viviendas en Estados Unidos median
 
 Del baseline al modelo final, el R² mejora en 0,16 puntos y el error medio se reduce un 29%. En un piso típico de 75 m², el error medio es de unos 227 $/mes. El resultado en el test es coherente con la validación cruzada (R² = 0,788), lo que confirma que el modelo generaliza bien.
 
+### Prueba con datos nuevos
+
+| Evaluación | Anuncios evaluados | R² | MAE ($/m²) | RMSE ($/m²) |
+|---|---|---|---|---|
+| Test (20% del dataset de 10.000) | 1.970 | 0,794 | 3,03 | 4,87 |
+| Datos nuevos (dataset de 100.000) | 88.913 | 0,668 | 3,29 | 5,10 |
+
+Con 88.913 anuncios que nunca ha visto, el error medio apenas aumenta (un 9%), lo que confirma que el modelo generaliza bien. El R² baja porque los datos nuevos incluyen muchas ciudades poco o nada representadas en el entrenamiento: en ciudades que el modelo no vio nunca, el R² es de 0,53, mientras que en ciudades con 5 o más anuncios de entrenamiento sube a 0,71.
+
 ## Hallazgos principales
 
 - **La ubicación es lo más importante:** longitud, latitud y estado aportan más del 60% de la importancia del modelo.
@@ -69,6 +85,7 @@ Del baseline al modelo final, el R² mejora en 0,16 puntos y el error medio se r
 - **`max_features` es el hiperparámetro clave:** limitar las variables que ve cada árbol (60%) mejora el modelo.
 - **Los modelos ensemble aportan la mayor mejora:** pasar de un árbol de decisión a Random Forest eleva el R² de 0,65 a 0,79, el mayor salto de todo el proyecto.
 - **El modelo ha alcanzado su techo con los datos disponibles:** Grid Search no mejora el resultado en el test (R² = 0,787 con los parámetros iniciales y con los ajustados), y Random Search, tras probar 200 combinaciones sobre más de 67.000 posibles, solo lo eleva a 0,794. Además, pasar de 30 a 200 combinaciones apenas aporta (+0,003). El rendimiento ya no depende de la configuración del modelo, sino de la información disponible: para mejorar de forma significativa harán falta más datos o nuevas variables.
+- **El precio depende del barrio, no solo de la ciudad:** en los datos nuevos, las grandes ciudades presentan el mejor R² pero no el menor error, porque sus precios varían mucho más entre barrios. Las variables actuales no capturan esa escala urbana.
 
 ## Aplicación
 
@@ -102,13 +119,15 @@ La aplicación está publicada en **Streamlit Community Cloud** y puede usarse d
 Apartment-rent-predictor/
 ├── data/
 │   ├── raw/
-│   │   └── apartments_for_rent_classified_10K.csv   # Dataset original
+│   │   ├── apartments_for_rent_classified_10K.csv   # Dataset original (entrenamiento)
+│   │   └── apartments_for_rent_classified_100K.csv  # Dataset completo (no incluido, descargar desde UCI)
 │   └── clean/
 │       ├── apartments_clean.csv                     # Dataset limpio
 │       └── cities.csv                               # Coordenadas medias y estado por ciudad
 ├── notebooks/
 │   ├── data_exploration.ipynb                       # Exploración y limpieza
-│   └── modeling.ipynb                               # Feature engineering, modelado y ajuste
+│   ├── modeling.ipynb                               # Feature engineering, modelado y ajuste
+│   └── new_data_test.ipynb                          # Prueba del modelo con datos nuevos (100.000 anuncios)
 ├── scrips/
 │   ├── cleaning.py                                  # Funciones de limpieza
 │   └── modeling.py                                  # Funciones de feature engineering, evaluación y predicción
