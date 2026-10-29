@@ -41,7 +41,7 @@ Predicción del precio de alquiler por m2, de viviendas en Estados Unidos median
 - **Modelos base:** KNN, regresión lineal y árbol de decisión.
 - **Modelos ensemble:** Bagging, Pasting, Random Forest, AdaBoost y Gradient Boosting, comparados en siete configuraciones de variables.
 - **Validación cruzada (5-fold)** de los finalistas (Random Forest y AdaBoost).
-- **Ajuste de hiperparámetros:** Grid Search (125 combinaciones) y Random Search (200 combinaciones sobre más de 67.000 posibles).
+- **Ajuste de hiperparámetros:** Grid Search (125 combinaciones, 625 entrenamientos) y Random Search (200 combinaciones, 1.000 entrenamientos) aplicados a los dos finalistas, Random Forest y AdaBoost, con los mismos rangos de valores y validación cruzada de 5 particiones.
 - **Métricas:** R², MAE y RMSE.
 
 ### 5. Modelo final
