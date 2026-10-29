@@ -136,6 +136,8 @@ Apartment-rent-predictor/
 │   └── model_columns.pkl                            # Columnas que espera el modelo
 ├── app/
 │   └── app.py                                       # Aplicación de Streamlit
+├── presentation/
+│   └── Apartment_Rent_Predictor.pptx                # Presentación del proyecto
 ├── requirements.txt                                 # Librerías necesarias
 └── README.md
 ```
